@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOASOBI — Design Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent: #38bdf8;
+    --accent-soft: rgba(56, 189, 248, 0.28);
+    --accent-2: #6366f1;
+    --text: #eef2fb;
+    --sub-text: rgba(210, 218, 240, 0.60);
+    --faint-text: rgba(210, 218, 240, 0.34);
+    --card-bg: rgba(17, 21, 40, 0.62);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --panel-bg: rgba(255, 255, 255, 0.035);
+    --panel-border: rgba(255, 255, 255, 0.07);
+    --hairline: rgba(255, 255, 255, 0.07);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  html,body{ margin:0; }
+  body{
+    font-family: "Noto Sans JP", -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    min-height:100vh;
+    background:
+      radial-gradient(110% 70% at 12% -5%, rgba(51, 57, 120, 0.55) 0%, transparent 50%),
+      radial-gradient(120% 80% at 105% 8%, rgba(24, 55, 92, 0.55) 0%, transparent 52%),
+      linear-gradient(165deg, #0a0d1f 0%, #080a17 55%, #05060e 100%);
+    color: var(--text);
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+  .blob{
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.40;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1{ width: 460px; height: 460px; top: -160px; left: -140px; background: var(--accent); animation: drift1 18s ease-in-out infinite; }
+  .blob-2{ width: 400px; height: 400px; top: 40%; right: -160px; background: var(--accent-2); animation: drift2 22s ease-in-out infinite; }
+  .blob-3{ width: 360px; height: 360px; bottom: -180px; left: 20%; background: #0ea5e9; animation: drift1 26s ease-in-out infinite; }
+  @keyframes drift1{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(40px,34px) scale(1.08);} }
+  @keyframes drift2{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(-32px,-26px) scale(1.06);} }
+
+  .wrap{ position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 0 22px; }
+
+  /* ---------- Nav ---------- */
+  header.nav{
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(8, 10, 22, 0.55);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav-inner{
+    max-width: 1040px; margin: 0 auto; padding: 14px 22px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family: "Space Grotesk", sans-serif; font-weight: 700;
+    font-size: 20px; letter-spacing: 0.14em;
+  }
+  .brand .dot{ width: 8px; height: 8px; border-radius:50%; background: var(--accent); box-shadow: 0 0 10px 2px var(--accent-soft); }
+  .nav-links{ display:flex; gap: 6px; }
+  .nav-links a{
+    color: var(--sub-text); text-decoration: none;
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 8px 13px; border-radius: 10px; transition: color .25s ease, background .25s ease;
+  }
+  .nav-links a:hover{ color: var(--text); background: var(--panel-bg); }
+  .nav-cta{
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 9px 16px; border-radius: 999px; text-decoration:none; color:#060814;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 6px 18px var(--accent-soft);
+  }
+  @media (max-width: 760px){ .nav-links{ display:none; } }
+
+  /* ---------- Section framing ---------- */
+  section{ padding: 66px 0 10px; }
+  .sec-label{
+    font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin: 0 0 6px 2px;
+    font-family: "Space Grotesk", sans-serif;
+  }
+  .sec-title{
+    font-size: 28px; font-weight: 900; margin: 0 0 26px; letter-spacing: 0.02em;
+  }
+
+  /* Progressive enhancement: hidden state only when JS is active, so the
+     page is never blank if the observer stalls or JS is disabled. */
+  html.js .reveal{ opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+  html.js .reveal.in{ opacity: 1; transform: translateY(0); }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding-top: 88px; text-align: center; }
+  .hero .kicker{
+    display:inline-block; font-family:"Space Grotesk",sans-serif;
+    font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--sub-text); border:1px solid var(--hairline);
+    padding: 7px 16px; border-radius: 999px; background: var(--panel-bg); margin-bottom: 26px;
+  }
+  .hero h1{
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(56px, 13vw, 132px); line-height: 0.9; margin: 0;
+    font-weight: 700; letter-spacing: 0.02em;
+    background: linear-gradient(135deg, #ffffff 20%, var(--accent) 85%, var(--accent-2) 120%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero .tagline{ margin: 22px 0 0; font-size: clamp(15px, 2.4vw, 19px); font-weight: 700; letter-spacing: 0.08em; }
+  .hero .lead{ margin: 12px auto 0; max-width: 540px; font-size: 14px; color: var(--sub-text); line-height: 1.9; }
+  .hero .btns{ display:flex; gap: 12px; justify-content:center; margin-top: 30px; flex-wrap: wrap; }
+  .btn{
+    font-size: 13.5px; font-weight: 700; letter-spacing: 0.04em; text-decoration:none;
+    padding: 13px 26px; border-radius: 999px; transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary{ color:#060814; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 10px 26px var(--accent-soft); }
+  .btn-ghost{ color: var(--text); border: 1px solid var(--card-border); background: var(--panel-bg); }
+  .btn:hover{ transform: translateY(-2px); }
+
+  .marquee{
+    margin-top: 64px; overflow:hidden; border-top:1px solid var(--hairline); border-bottom:1px solid var(--hairline);
+    padding: 16px 0; -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-track{ display:flex; gap: 42px; width: max-content; animation: scrollx 26s linear infinite; }
+  .marquee-track span{ font-family:"Space Grotesk",sans-serif; font-size: 22px; font-weight: 600; color: var(--faint-text); letter-spacing: 0.05em; }
+  .marquee-track span b{ color: var(--accent); font-weight: 700; }
+  @keyframes scrollx{ to{ transform: translateX(-50%); } }
+
+  /* ---------- Card base (glass) ---------- */
+  .card{
+    position: relative; overflow: hidden;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 22px; backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 22px 54px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .card::before{
+    content:""; position:absolute; inset:0; border-radius:22px; padding:1px;
+    background: linear-gradient(140deg, var(--accent-soft), transparent 40%, transparent 62%, rgba(255,255,255,0.05));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none; opacity:.9;
+  }
+  .card:hover{ transform: translateY(-4px); border-color: rgba(255,255,255,0.16); }
+
+  /* ---------- News ---------- */
+  .news-list{ display:flex; flex-direction:column; gap: 10px; }
+  .news{ display:grid; grid-template-columns: 120px 96px 1fr; gap: 16px; align-items:center; padding: 18px 22px; }
+  .news .date{ font-family:"Space Grotesk",sans-serif; font-size: 13px; color: var(--sub-text); letter-spacing: 0.03em; }
+  .news .tag{
+    justify-self:start; font-size: 10.5px; font-weight:700; letter-spacing:0.08em;
+    padding: 4px 11px; border-radius: 999px; border:1px solid var(--accent-soft); color: var(--accent);
+    background: rgba(56,189,248,0.06);
+  }
+  .news .headline{ font-size: 14.5px; font-weight: 500; line-height: 1.6; }
+  @media (max-width: 640px){ .news{ grid-template-columns: 1fr; gap: 6px; } }
+
+  /* ---------- Discography ---------- */
+  .disco-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 820px){ .disco-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px){ .disco-grid{ grid-template-columns: 1fr; } }
+  .release{ padding: 16px; }
+  .cover{
+    aspect-ratio: 1/1; border-radius: 14px; margin-bottom: 14px; position: relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(120% 120% at 20% 10%, rgba(255,255,255,0.14), transparent 45%),
+      linear-gradient(150deg, var(--c1, #1e3a8a), var(--c2, #0ea5e9));
+  }
+  .cover .glyph{ font-family:"Space Grotesk",sans-serif; font-weight: 700; font-size: 30px; color: rgba(255,255,255,0.92); letter-spacing:0.04em; text-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+  .release .r-type{ font-size: 10.5px; letter-spacing:0.14em; text-transform:uppercase; color: var(--faint-text); font-weight:700; }
+  .release .r-title{ font-size: 16px; font-weight: 700; margin: 5px 0 3px; }
+  .release .r-year{ font-family:"Space Grotesk",sans-serif; font-size: 12.5px; color: var(--sub-text); }
+
+  /* ---------- Live ---------- */
+  .live-list{ display:flex; flex-direction:column; }
+  .live{ display:grid; grid-template-columns: 92px 1fr auto; gap: 18px; align-items:center; padding: 18px 22px; border-top:1px solid var(--hairline); }
+  .live:first-child{ border-top:none; }
+  .live .l-date{ text-align:center; }
+  .live .l-date .d{ font-family:"Space Grotesk",sans-serif; font-size: 26px; font-weight: 700; line-height:1; }
+  .live .l-date .m{ font-size: 10.5px; letter-spacing:0.1em; color: var(--sub-text); text-transform:uppercase; }
+  .live .l-info .l-name{ font-size: 15px; font-weight: 700; }
+  .live .l-info .l-venue{ font-size: 12.5px; color: var(--sub-text); margin-top: 3px; }
+  .live .l-status{ font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; padding: 7px 14px; border-radius: 999px; }
+  .live .l-status.on{ color: var(--accent); border:1px solid var(--accent-soft); background: rgba(56,189,248,0.06); }
+  .live .l-status.soon{ color: var(--faint-text); border:1px solid var(--hairline); }
+  @media (max-width: 560px){ .live{ grid-template-columns: 64px 1fr; } .live .l-status{ grid-column: 2; justify-self:start; margin-top:6px; } }
+
+  /* ---------- Profile ---------- */
+  .profile-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 640px){ .profile-grid{ grid-template-columns: 1fr; } }
+  .member{ padding: 24px; display:flex; gap: 18px; align-items:center; }
+  .avatar{
+    width: 74px; height: 74px; border-radius: 50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Space Grotesk",sans-serif; font-size: 26px; font-weight:700; color:#060814;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 8px 22px var(--accent-soft);
+  }
+  .member .m-role{ font-size: 11px; letter-spacing:0.16em; text-transform:uppercase; color: var(--accent); font-weight:700; }
+  .member .m-name{ font-size: 20px; font-weight: 900; margin: 4px 0 6px; }
+  .member .m-desc{ font-size: 12.5px; color: var(--sub-text); line-height:1.8; }
+
+  .about-card{ padding: 30px 28px; margin-top: 18px; }
+  .about-card p{ margin: 0; font-size: 14px; line-height: 2; color: var(--sub-text); }
+  .about-card p b{ color: var(--text); font-weight: 700; }
+
+  /* ---------- Media / social ---------- */
+  .links-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 640px){ .links-grid{ grid-template-columns: repeat(2, 1fr); } }
+  .link-tile{ padding: 22px 16px; text-align:center; text-decoration:none; color: var(--text); }
+  .link-tile .ico{ font-size: 26px; }
+  .link-tile .lbl{ display:block; margin-top: 10px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.04em; }
+  .link-tile .sub{ display:block; margin-top: 3px; font-size: 10.5px; color: var(--faint-text); }
+
+  /* ---------- Footer ---------- */
+  footer.site{ margin-top: 72px; border-top: 1px solid var(--hairline); padding: 34px 0 44px; }
+  .foot-inner{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap: 14px; }
+  .foot-inner .brand{ font-size: 17px; }
+  .foot-inner .copy{ font-size: 11px; color: var(--faint-text); letter-spacing: 0.04em; }
+  .disclaimer{ margin-top: 20px; font-size: 10.5px; color: var(--faint-text); line-height: 1.8; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="brand"><span class="dot"></span>YOASOBI</div>
+      <nav class="nav-links">
+        <a href="#news">NEWS</a>
+        <a href="#music">MUSIC</a>
+        <a href="#live">LIVE</a>
+        <a href="#profile">PROFILE</a>
+        <a href="#media">MEDIA</a>
+      </nav>
+      <a class="nav-cta" href="#media">FAN CLUB</a>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <span class="kicker reveal">Novel into Music</span>
+      <h1 class="reveal">YOASOBI</h1>
+      <p class="tagline reveal">小説を音楽にするユニット</p>
+      <p class="lead reveal">物語から生まれるメロディ。Ayase と ikura が紡ぐ、言葉と音の新しいかたち。<br>すべての楽曲には、原作となる一つの物語があります。</p>
+      <div class="btns reveal">
+        <a class="btn btn-primary" href="#music">Listen Now</a>
+        <a class="btn btn-ghost" href="#live">Live Schedule</a>
+      </div>
+    </section>
+
+    <div class="marquee reveal">
+      <div class="marquee-track">
+        <span>夜に駆ける</span><span><b>♪</b></span>
+        <span>群青</span><span><b>♪</b></span>
+        <span>怪物</span><span><b>♪</b></span>
+        <span>三原色</span><span><b>♪</b></span>
+        <span>アイドル</span><span><b>♪</b></span>
+        <span>勇者</span><span><b>♪</b></span>
+        <span>夜に駆ける</span><span><b>♪</b></span>
+        <span>群青</span><span><b>♪</b></span>
+        <span>怪物</span><span><b>♪</b></span>
+        <span>三原色</span><span><b>♪</b></span>
+        <span>アイドル</span><span><b>♪</b></span>
+        <span>勇者</span><span><b>♪</b></span>
+      </div>
+    </div>
+
+    <!-- News -->
+    <section id="news">
+      <p class="sec-label reveal">Information</p>
+      <h2 class="sec-title reveal">NEWS</h2>
+      <div class="news-list">
+        <div class="card news reveal"><span class="date">2026.06.28</span><span class="tag">LIVE</span><span class="headline">アリーナツアー「INTO THE NIGHT」追加公演の開催が決定しました。</span></div>
+        <div class="card news reveal"><span class="date">2026.06.15</span><span class="tag">RELEASE</span><span class="headline">新曲「藍色の街」配信スタート。原作小説も特設サイトで公開中。</span></div>
+        <div class="card news reveal"><span class="date">2026.05.30</span><span class="tag">MEDIA</span><span class="headline">音楽番組出演情報を更新しました。放送日時をチェック。</span></div>
+        <div class="card news reveal"><span class="date">2026.05.12</span><span class="tag">GOODS</span><span class="headline">オフィシャルグッズ第3弾がオンラインストアに登場。</span></div>
+      </div>
+    </section>
+
+    <!-- Discography -->
+    <section id="music">
+      <p class="sec-label reveal">Discography</p>
+      <h2 class="sec-title reveal">MUSIC</h2>
+      <div class="disco-grid">
+        <div class="card release reveal">
+          <div class="cover" style="--c1:#1e3a8a; --c2:#0ea5e9;"><span class="glyph">THE BOOK</span></div>
+          <div class="r-type">1st Album</div><div class="r-title">THE BOOK</div><div class="r-year">2021</div>
+        </div>
+        <div class="card release reveal">
+          <div class="cover" style="--c1:#312e81; --c2:#6366f1;"><span class="glyph">THE BOOK 2</span></div>
+          <div class="r-type">2nd Album</div><div class="r-title">THE BOOK 2</div><div class="r-year">2021</div>
+        </div>
+        <div class="card release reveal">
+          <div class="cover" style="--c1:#0c4a6e; --c2:#22d3ee;"><span class="glyph">THE BOOK 3</span></div>
+          <div class="r-type">3rd Album</div><div class="r-title">THE BOOK 3</div><div class="r-year">2023</div>
+        </div>
+        <div class="card release reveal">
+          <div class="cover" style="--c1:#155e75; --c2:#38bdf8;"><span class="glyph">夜に駆ける</span></div>
+          <div class="r-type">Single</div><div class="r-title">夜に駆ける</div><div class="r-year">2019</div>
+        </div>
+        <div class="card release reveal">
+          <div class="cover" style="--c1:#3730a3; --c2:#818cf8;"><span class="glyph">群青</span></div>
+          <div class="r-type">Single</div><div class="r-title">群青</div><div class="r-year">2020</div>
+        </div>
+        <div class="card release reveal">
+          <div class="cover" style="--c1:#1e40af; --c2:#0ea5e9;"><span class="glyph">アイドル</span></div>
+          <div class="r-type">Single</div><div class="r-title">アイドル</div><div class="r-year">2023</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live -->
+    <section id="live">
+      <p class="sec-label reveal">Tour &amp; Events</p>
+      <h2 class="sec-title reveal">LIVE</h2>
+      <div class="card live-list reveal">
+        <div class="live">
+          <div class="l-date"><div class="d">12</div><div class="m">Jul 2026</div></div>
+          <div class="l-info"><div class="l-name">INTO THE NIGHT TOUR 2026</div><div class="l-venue">東京・有明アリーナ</div></div>
+          <div class="l-status on">受付中</div>
+        </div>
+        <div class="live">
+          <div class="l-date"><div class="d">26</div><div class="m">Jul 2026</div></div>
+          <div class="l-info"><div class="l-name">INTO THE NIGHT TOUR 2026</div><div class="l-venue">大阪・大阪城ホール</div></div>
+          <div class="l-status on">受付中</div>
+        </div>
+        <div class="live">
+          <div class="l-date"><div class="d">09</div><div class="m">Aug 2026</div></div>
+          <div class="l-info"><div class="l-name">Summer Sonic 2026</div><div class="l-venue">千葉・ZOZOマリンスタジアム</div></div>
+          <div class="l-status soon">近日発売</div>
+        </div>
+        <div class="live">
+          <div class="l-date"><div class="d">21</div><div class="m">Sep 2026</div></div>
+          <div class="l-info"><div class="l-name">INTO THE NIGHT TOUR 2026 追加公演</div><div class="l-venue">愛知・日本ガイシホール</div></div>
+          <div class="l-status soon">近日発売</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Profile -->
+    <section id="profile">
+      <p class="sec-label reveal">About</p>
+      <h2 class="sec-title reveal">PROFILE</h2>
+      <div class="profile-grid">
+        <div class="card member reveal">
+          <div class="avatar">A</div>
+          <div><div class="m-role">Music / Producer</div><div class="m-name">Ayase</div><div class="m-desc">コンポーザー。ボカロシーン出身のソングライターとして、物語を旋律へと翻訳する。</div></div>
+        </div>
+        <div class="card member reveal">
+          <div class="avatar">i</div>
+          <div><div class="m-role">Vocal</div><div class="m-name">ikura</div><div class="m-desc">シンガーソングライター 幾田りら。透明感のある歌声で物語の主人公を描く。</div></div>
+        </div>
+      </div>
+      <div class="card about-card reveal">
+        <p><b>YOASOBI（ヨアソビ）</b>は、コンポーザーの Ayase とボーカルの ikura によるユニット。<b>「小説を音楽にする」</b>というコンセプトのもと、投稿された物語を原作に楽曲を制作する。2019年、デビュー曲「夜に駆ける」が社会現象的なヒットを記録し、以降も数々の楽曲が世代を超えて愛されている。</p>
+      </div>
+    </section>
+
+    <!-- Media -->
+    <section id="media">
+      <p class="sec-label reveal">Follow</p>
+      <h2 class="sec-title reveal">MEDIA</h2>
+      <div class="links-grid">
+        <a class="card link-tile reveal" href="#"><span class="ico">▶️</span><span class="lbl">YouTube</span><span class="sub">Official Channel</span></a>
+        <a class="card link-tile reveal" href="#"><span class="ico">🎧</span><span class="lbl">Streaming</span><span class="sub">Listen Everywhere</span></a>
+        <a class="card link-tile reveal" href="#"><span class="ico">📸</span><span class="lbl">Instagram</span><span class="sub">@yoasobi</span></a>
+        <a class="card link-tile reveal" href="#"><span class="ico">✳️</span><span class="lbl">X</span><span class="sub">Latest Updates</span></a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site">
+      <div class="foot-inner">
+        <div class="brand"><span class="dot"></span>YOASOBI</div>
+        <div class="copy">Design concept · Glassmorphism UI</div>
+      </div>
+      <p class="disclaimer">※ 本ページは、天気アプリと共通のデザインルール（ダーク・グラスモーフィズム）を適用したデザインモックです。公式サイトではなく、掲載しているニュース・ライブ日程などは架空のサンプルです。楽曲名・メンバー名は公開情報に基づく参考表示です。</p>
+    </footer>
+
+  </div>
+
+<script>
+  // Enable the hidden-until-reveal state only now that JS is running.
+  document.documentElement.classList.add("js");
+
+  const reveals = document.querySelectorAll(".reveal");
+  const revealAll = () => reveals.forEach(el => el.classList.add("in"));
+
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    reveals.forEach((el, i) => {
+      el.style.transitionDelay = Math.min(i % 6, 5) * 0.05 + "s";
+      io.observe(el);
+    });
+    // Failsafe: if anything is still hidden shortly after load, show it.
+    window.addEventListener("load", () => setTimeout(revealAll, 1200));
+  } else {
+    revealAll();
+  }
+</script>
+</body>
+</html>
