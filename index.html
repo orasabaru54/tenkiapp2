@@ -247,6 +247,14 @@
     gap:7px;
   }
   .location .city-name .pin{ font-size: 13px; opacity: 0.7; }
+  .location .city-name .region{
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--sub-text);
+    padding-left: 9px;
+    margin-left: 2px;
+    border-left: 1px solid var(--hairline);
+  }
   .location .updated{
     font-size: 10.5px;
     letter-spacing: 0.03em;
@@ -676,7 +684,7 @@
     cardEl.innerHTML = `
       <div class="content">
         <div class="location">
-          <div class="city-name"><span class="pin">📍</span>${city.name}<span style="color:var(--faint-text);font-weight:400;font-size:12px;">${city.region}</span></div>
+          <div class="city-name"><span class="pin">📍</span>${city.name}<span class="region">${city.region}</span></div>
           <div class="updated">${updatedStr} 更新</div>
         </div>
 
